@@ -4,8 +4,8 @@ import * as z from "zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema } from "@/schemas";
-import { loginAction } from "@/actions/login";
+import { RegisterSchema } from "@/schemas";
+import { registerAction } from "@/actions/register";
 import {
   Form,
   FormControl,
@@ -20,8 +20,8 @@ import CardWrapper from "@/components/auth/card-wrapper";
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 
-export default function LoginForm() {
-  const [loginMessages, setLoginMessages] = useState<{
+export default function RegisterForm() {
+  const [registerMessages, setRegisterMessages] = useState<{
     errorMessage: string | undefined;
     successMessage: string | undefined;
   }>({
@@ -30,20 +30,21 @@ export default function LoginForm() {
   });
   const [isPending, setTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: "",
       password: "",
+      name: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    setLoginMessages({ errorMessage: "", successMessage: "" });
+  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+    setRegisterMessages({ errorMessage: "", successMessage: "" });
 
     setTransition(() => {
-      loginAction(values).then((data) => {
-        setLoginMessages({
+      registerAction(values).then((data) => {
+        setRegisterMessages({
           errorMessage: data.error,
           successMessage: data.success,
         });
@@ -53,14 +54,32 @@ export default function LoginForm() {
 
   return (
     <CardWrapper
-      headerLabel="Welcome back"
-      backButtonLabel="Don't have an account?"
-      backButtonHref="/auth/register"
+      headerLabel="Create an account"
+      backButtonLabel="Already have an account?"
+      backButtonHref="/auth/login"
       showSocial
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={isPending}
+                      placeholder="john doe"
+                      type="text"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
@@ -98,10 +117,10 @@ export default function LoginForm() {
               )}
             />
           </div>
-          <FormError message={loginMessages.errorMessage} />
-          <FormSuccess message={loginMessages.successMessage} />
+          <FormError message={registerMessages.errorMessage} />
+          <FormSuccess message={registerMessages.successMessage} />
           <Button type="submit" className="w-full" disabled={isPending}>
-            Login
+            Register
           </Button>
         </form>
       </Form>
