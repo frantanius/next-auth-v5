@@ -43,10 +43,12 @@ export default function LoginForm() {
 
     setTransition(() => {
       loginAction(values).then((data) => {
-        setLoginMessages({
-          errorMessage: data.error,
-          successMessage: data.success,
-        });
+        if (data?.error || data?.success) {
+          setLoginMessages({
+            errorMessage: data.error,
+            successMessage: data.success,
+          });
+        }
       });
     });
   };
