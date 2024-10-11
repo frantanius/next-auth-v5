@@ -22,6 +22,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
   /*
+   * Pages signIn: NextAuth will always redirect to signIn
+    when something goes wrong
+
+   * Pages error: NextAuth will redirect to
+    custom page url "/auth/error"
+  */
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/error",
+  },
+  /*
+    Events for email | credentials verification
+  */
+  events: {
+    async linkAccount({ user }) {
+      await db.user.update({
+        where: { id: user.id },
+        data: { emailVerified: new Date() },
+      });
+    },
+  },
+  /*
     Callbacks for extends the session
   */
   callbacks: {

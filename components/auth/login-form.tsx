@@ -1,6 +1,7 @@
 "use client";
 
 import * as z from "zod";
+import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +22,12 @@ import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 
 export default function LoginForm() {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in use with different provider"
+      : "";
+
   const [loginMessages, setLoginMessages] = useState<{
     errorMessage: string | undefined;
     successMessage: string | undefined;
@@ -100,7 +107,7 @@ export default function LoginForm() {
               )}
             />
           </div>
-          <FormError message={loginMessages.errorMessage} />
+          <FormError message={loginMessages.errorMessage || urlError} />
           <FormSuccess message={loginMessages.successMessage} />
           <Button type="submit" className="w-full" disabled={isPending}>
             Login
