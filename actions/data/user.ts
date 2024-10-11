@@ -10,7 +10,9 @@ export const getUserByEmail = async (email: string) => {
   }
 };
 
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: string | undefined) => {
+  if (!id) return null;
+
   try {
     const user = await db.user.findFirst({ where: { id } });
     return user;
