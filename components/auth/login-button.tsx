@@ -2,7 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import LoginForm from "./login-form";
 
 interface ILoginButtonProps {
@@ -26,6 +31,7 @@ export default function LoginButton({
     return (
       <Dialog>
         <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+        <DialogTitle /> {/* Fix bug require dialog title */}
         <DialogContent className="w-auto border-none bg-transparent p-0">
           <Suspense>
             <LoginForm />
