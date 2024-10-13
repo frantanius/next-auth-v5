@@ -12,14 +12,15 @@ import type { UserRole } from "@prisma/client";
   Declare module
   Fixing error type role
 */
+export type ExtendedUser = DefaultSession["user"] & {
+  role: UserRole;
+  isTwoFactorEnabled: boolean;
+  isOAuth: boolean;
+};
+
 declare module "next-auth" {
   interface Session {
-    user: {
-      role: UserRole;
-      isTwoFactorEnabled: boolean;
-      isOAuth: boolean;
-      email: string;
-    } & DefaultSession["user"];
+    user: ExtendedUser;
   }
 }
 
