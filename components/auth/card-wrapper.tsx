@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import {
   Card,
   CardContent,
@@ -35,7 +36,9 @@ export default function CardWrapper({
 
       {showSocial && (
         <CardFooter>
-          <Social />
+          <Suspense>
+            <Social />
+          </Suspense>
         </CardFooter>
       )}
 

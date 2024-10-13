@@ -11,6 +11,7 @@ import { loginAction } from "@/actions/login";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,6 +25,7 @@ import FormSuccess from "@/components/form-success";
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") as string;
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Email already in use with different provider"
@@ -52,7 +54,7 @@ export default function LoginForm() {
 
     setTransition(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      loginAction(values).then((data: any) => {
+      loginAction(values, callbackUrl).then((data: any) => {
         if (data?.error) {
           form.resetField("password");
           setLoginMessages((prevState) => ({
@@ -100,7 +102,6 @@ export default function LoginForm() {
                         aria-disabled={isPending}
                       />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -122,6 +123,7 @@ export default function LoginForm() {
                           type="email"
                         />
                       </FormControl>
+                      <FormDescription>onboarding@resend.dev</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -140,6 +142,7 @@ export default function LoginForm() {
                           type="password"
                         />
                       </FormControl>
+                      <FormDescription>123456</FormDescription>
 
                       <Button
                         size="sm"

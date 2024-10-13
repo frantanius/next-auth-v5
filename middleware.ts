@@ -38,10 +38,20 @@ export default auth((req) => {
   }
 
   /*
-    if not logged in and in "/" route, then redirect to login page
+    * if not logged in and in "/" route, then redirect to login page.
+    * callbackUrl is for when the last page is visited,
+    when login back automatically redirect to last page visited.
   */
   if (!isLoggedIn && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/auth/login", nextUrl));
+    let callbackUrl = nextUrl.pathname;
+
+    if (nextUrl.search) callbackUrl += nextUrl.search;
+
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+    return NextResponse.redirect(
+      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl),
+    );
   }
 
   /*

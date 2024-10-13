@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Suspense } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import LoginForm from "./login-form";
 
@@ -26,7 +27,9 @@ export default function LoginButton({
       <Dialog>
         <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
         <DialogContent className="w-auto border-none bg-transparent p-0">
-          <LoginForm />
+          <Suspense>
+            <LoginForm />
+          </Suspense>
         </DialogContent>
       </Dialog>
     );
